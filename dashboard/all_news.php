@@ -6,14 +6,6 @@ if (!isset($_SESSION['logged_in'])) {
     header("location: ../index.php");
 }
 
-// files tellen en in variable zetten
-$files_count_result = $mysql->query("SELECT COUNT(idfiles) FROM files");
-$files_count = $files_count_result->num_rows;
-// files kunnen uploaden
-
-// files uitlezen
-$files_table_sql = "SELECT * FROM files";
-$files_table_result = $mysql->query($files_table_sql);
 ?>
 <!DOCTYPE html>
 <html>
@@ -26,7 +18,10 @@ $files_table_result = $mysql->query($files_table_sql);
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
     <link rel="stylesheet" href="assets/fonts/fontawesome-all.min.css">
     <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
+    <script src="https://use.fontawesome.com/2588abd5a6.js"></script>
+    
 </head>
 
 <body id="page-top">
@@ -39,9 +34,10 @@ $files_table_result = $mysql->query($files_table_sql);
                 <hr class="sidebar-divider my-0">
                 <ul class="navbar-nav text-light" id="accordionSidebar">
                     <li class="nav-item"><a class="nav-link" href="index.php"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
-                    <li class="nav-item"><a class="nav-link active" href="bestanden.php"><i class="fas fa-user"></i><span>Bestanden</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="bestanden.php"><i class="fas fa-user"></i><span>Bestanden</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="gebruikers.php"><i class="fa fa-files-o"></i><span>Gebruikers</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="../index.php"><i class="fa fa-files-o"></i><span>RIVORDELTA</span></a></li>
+                    <li class="nav-item"><a class="nav-link active" href="all_news.php"><i class="fa fa-files-o"></i><span>Nieuwsbrief</span></a></li>
                 </ul>
                 <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div>
             </div>
@@ -67,83 +63,45 @@ $files_table_result = $mysql->query($files_table_sql);
                 </nav>
                 <div class="container-fluid">
                     <h3 class="text-dark mb-4">Bestanden</h3>
-                    <div class="row mb-3">
-                        <div class="col-lg-8">
-                            <div class="row mb-3 d-none">
-                                <div class="col">
-                                    <div class="card textwhite bg-primary text-white shadow">
-                                        <div class="card-body">
-                                            <div class="row mb-2">
-                                                <div class="col">
-                                                    <p class="m-0">Peformance</p>
-                                                    <p class="m-0"><strong>65.2%</strong></p>
-                                                </div>
-                                                <div class="col-auto"><i class="fas fa-rocket fa-2x"></i></div>
-                                            </div>
-                                            <p class="text-white-50 small m-0"><i class="fas fa-arrow-up"></i>&nbsp;5% since last month</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="card textwhite bg-success text-white shadow">
-                                        <div class="card-body">
-                                            <div class="row mb-2">
-                                                <div class="col">
-                                                    <p class="m-0">Peformance</p>
-                                                    <p class="m-0"><strong>65.2%</strong></p>
-                                                </div>
-                                                <div class="col-auto"><i class="fas fa-rocket fa-2x"></i></div>
-                                            </div>
-                                            <p class="text-white-50 small m-0"><i class="fas fa-arrow-up"></i>&nbsp;5% since last month</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <div class="container-fluid">
                         <div class="card shadow">
                             <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6 text-nowrap">
-                                        <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable"></div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="text-md-end dataTables_filter" id="dataTable_filter"><label class="form-label"><input type="search" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Zoeken" /></label></div>
-                                    </div>
-                                </div>
                                 <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
                                     <table class="table my-0" id="dataTable">
+                                    <a href="./add_news.php" class="button">Toevoegen</a>
                                         <thead>
                                             <tr>
-                                                <td><strong>Name</strong></td>
-                                                <td><strong>categorie</strong></td>
-                                                <td><strong>Upload Datum</strong></td>
-                                                <td><strong>Geupload door</strong></td>
+                                                <td><strong>Titel</strong></td>
+                                                <td><strong>Datum</strong></td>
+                                                <td><strong>Aanpassen/Verwijderen</strong></td>
                                             </tr>
                                         </thead>
                                         <tbody>
-
                                             <?php
+                                                $sql = "SELECT * FROM news";
+                                                $stm = $pdo->query($sql);
 
-                                            if ($files_table_result->num_rows > 0) {
-                                                // output data of each row
-                                                while ($row = mysqli_fetch_array($files_table_result)) {
+                                                $nieuws_berichten = $stm->fetchAll();
+
+                                                foreach ($nieuws_berichten as $nieuws_bericht) {
                                                     echo "<tr>";
-                                                    echo "<td>" . $row["name"] . "</td>";
-                                                    echo "<td>" . $row["categorie"] . "</td>";
-                                                    echo "<td>" . $row["date"] . "</td>";
-                                                    echo "<td>" . $row["uploaded_by"] . "</td>";
+                                                    echo "<td>" . $nieuws_bericht["headtext"] . "</td>";
+                                                    echo "<td>" . $nieuws_bericht["datum"] . "</td>";  
+                                                    ?>
+                                                       <td> <a href="./edit_news.php?id=<?php echo $nieuws_bericht['idnews'];?>"> <i class="fas fa-edit"></i></a>
+                                                       <a href="./del_news.php?id=<?php echo $nieuws_bericht['idnews'];?>"><i class="fas fa-trash"></i></a>
+                                                    
+                                                    </td>
+                                                    <?php
                                                     echo "</tr>";
                                                 }
-                                            }
                                             ?>
                                         </tbody>
                                     </table>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 align-self-center">
-                                        <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Totaal: <?php echo $files_count; ?> Bestanden.</p>
+                                        <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Totaal:  Bestanden.</p>
                                     </div>
 
                                 </div>

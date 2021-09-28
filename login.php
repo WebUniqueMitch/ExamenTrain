@@ -1,4 +1,3 @@
-
 <?php 
 session_start();
 include("./secured/pdoconn.php");
@@ -7,6 +6,7 @@ if(isset($_SESSION['logged_in'])){
 }
 
 $msg = ""; 
+
 if(isset($_POST['submit'])) {
   $username = htmlspecialchars(trim($_POST['username']));
   $password = htmlspecialchars(trim($_POST['password']));
@@ -22,7 +22,7 @@ if(isset($_POST['submit'])) {
       $count = $stmt->rowCount();
       $row   = $stmt->fetch(PDO::FETCH_ASSOC);
       if($count == 1 && !empty($row)) {
-     
+    
         $_SESSION['logged_in'] = 1;
         $_SESSION['login_user'] = $username;
 

@@ -1,3 +1,7 @@
+<?php
+include("./secured/pdoconn.php");
+
+?>
 <!DOCTYPE html>
 <html>
 
@@ -6,6 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>informatie - RIVORDELTA</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styling/style_news.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,700,700i,600,600i">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css">
     <link rel="stylesheet" href="assets/css/vanilla-zoom.min.css">
@@ -29,36 +34,18 @@
                 <div class="block-content">
                     <div class="post-image" style="background-image:url(&quot;assets/img/scenery/image3.jpg&quot;);"></div>
                     <div class="post-body">
-                        <h3>Wat is RIVOR DELTA?</h3>
-                        <div class="post-info"><span>By John Smith</span><span>Jan 27, 2018</span></div>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc quam urna, dignissim nec auctor in, mattis vitae leo. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc quam urna, dignissim nec auctor in, mattis vitae leo. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc quam urna, dignissim nec auctor in, mattis vitae leo. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        <figure class="figure"><img class="rounded img-fluid figure-img" src="assets/img/scenery/image6.jpg" alt="A generic square placeholder image with rounded corners in a figure.">
-                            <figcaption class="figure-caption">Lorem ipsum dolor</figcaption>
-                        </figure>
-                        <h4>Lorem Ipsum</h4>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc quam urna, dignissim nec auctor in, mattis vitae leo. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc quam urna, dignissim nec auctor in, mattis vitae leo. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc quam urna, dignissim nec auctor in, mattis vitae leo. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <figure class="figure"><img class="rounded img-fluid figure-img" src="assets/img/scenery/image4.jpg" alt="A generic square placeholder image with rounded corners in a figure.">
-                                    <figcaption class="figure-caption">Lorem Ipsum dolor</figcaption>
-                                </figure>
-                            </div>
-                            <div class="col">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc quam urna, dignissim nec auctor in, mattis vitae leo. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc quam urna, dignissim nec auctor in, mattis vitae leo. Lorem ipsum dolor sit amet, consectetur adipiscing elit.&nbsp;</p>
-                            </div>
-                        </div>
-                        <h4>Lorem Ipsum dolor</h4>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc quam urna, dignissim nec auctor in, mattis vitae leo. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc quam urna, dignissim nec auctor in, mattis vitae leo. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        <div class="row">
-                            <div class="col">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc quam urna, dignissim nec auctor in, mattis vitae leo. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc quam urna, dignissim nec auctor in, mattis vitae leo. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                            </div>
-                            <div class="col-md-6">
-                                <figure class="figure"><img class="rounded img-fluid figure-img" src="assets/img/scenery/image5.jpg" alt="A generic square placeholder image with rounded corners in a figure.">
-                                    <figcaption class="figure-caption">Lorem Ipsum dolor</figcaption>
-                                </figure>
-                            </div>
-                        </div>
+                        <?php
+                            /* Hier komen de nieuwsberichten */
+                            $sql = "SELECT * FROM news";
+                            $stm = $pdo->query($sql);
+
+                            $nieuws_berichten = $stm->fetchAll();
+
+                            foreach ($nieuws_berichten as $nieuws_bericht) {
+                                echo "<img width='500' class='nieuws_plaatje' height='500' src='./dashboard/images/". $nieuws_bericht['picture_path'] ."'><h2 class='head_niewus'><b> " . $nieuws_bericht["headtext"] . "</h2> </b><p class='nieuws_text'> " . $nieuws_bericht["newstext"] ."</p>" . "<hr/>";
+                               
+                            }
+                        ?>
                     </div>
                 </div>
             </div>
