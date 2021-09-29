@@ -7,12 +7,17 @@ if(isset($_POST['submit'])){
     $description = htmlspecialchars($_POST['beschrijving']);
     $gemaakt = htmlspecialchars($_POST['geschreven_door']);
     $id = htmlspecialchars($_POST['id']);
+    if($titel != "" && $description != ""){
+        $sql = "INSERT INTO comments (titel, description, geplaatst_door, news_idnews) VALUES (?,?,?,?)";
+        $stmt= $pdo->prepare($sql);
+        $stmt->execute([$titel, $description, $gemaakt, $id]);
+    
+        $feedback = "Comment wordt eerst gecontrolleert door site eigenaar!";
+    }else{
+        $feedback = "Graag de verplichte velden invoeren!";
+    }
 
-    $sql = "INSERT INTO comments (titel, description, geplaatst_door, news_idnews) VALUES (?,?,?,?)";
-    $stmt= $pdo->prepare($sql);
-    $stmt->execute([$titel, $description, $gemaakt, $id]);
-
-    $feedback = "Comment wordt eerst gecontrolleert door site eigenaar!";
+   
 }
 ?>
 <!DOCTYPE html>
@@ -21,12 +26,17 @@ if(isset($_POST['submit'])){
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>informatie - RIVORDELTA</title>
+    <title>Nieuwsbrief - RIVORDELTA</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="styling/style_news.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,700,700i,600,600i">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css">
+    <link rel="stylesheet" href="assets/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
     <link rel="stylesheet" href="assets/css/vanilla-zoom.min.css">
+    <script src="https://use.fontawesome.com/2588abd5a6.js"></script>
+
 </head>
 
 <body>
@@ -77,6 +87,10 @@ if(isset($_POST['submit'])){
                                 foreach ($comments_news as $comments_news) {
                                     echo "Geplaatst door: <b>".$comments_news['titel'] . "</b><br>";
                                     echo $comments_news['description'];
+                                    if($_SESSION['role'] == "1"){?>
+                                    
+                                        <br><br><a href="./dashboard/del_comment.php?id=<?php echo $comments_news['idcomments'];?>"><i class="fa fa-trash" style="font-size: 35px; color:red;" class="trashcan" aria-hidden="true"></i></i></a><?php
+                                    }
                                     echo "<hr>";
                                 }
 

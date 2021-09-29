@@ -1,14 +1,20 @@
 <?php
 session_start();
-include("../secured/includes.php");
-if(!isset($_SESSION['logged_in'])){
-header("location: ../index.php");
+include("../secured/pdoconn.php");
+
+
+if (!isset($_SESSION['logged_in'])) {
+    header("location: ../index.php");
 }
-$username = $_SESSION['login_user'];
 
+// files tellen en in variable zetten
+// $files_count_result = $mysql->query("SELECT COUNT(idfiles) FROM files");
+// $files_count = $files_count_result->num_rows;
+// // files kunnen uploaden
 
-$gebruikers_table_sql = "SELECT * FROM accounts";
-$gebruikers_table_result = $mysql->query($gebruikers_table_sql);
+// // files uitlezen
+// $files_table_sql = "SELECT * FROM files";
+// $files_table_result = $mysql->query($files_table_sql);
 ?>
 <!DOCTYPE html>
 <html>
@@ -16,7 +22,7 @@ $gebruikers_table_result = $mysql->query($gebruikers_table_sql);
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Table - Brand</title>
+    <title>Gebruikers - RIVORDELTA</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
     <link rel="stylesheet" href="assets/fonts/fontawesome-all.min.css">
@@ -26,17 +32,18 @@ $gebruikers_table_result = $mysql->query($gebruikers_table_sql);
 
 <body id="page-top">
     <div id="wrapper">
-        <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0">
+    <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0">
             <div class="container-fluid d-flex flex-column p-0"><a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
                     <div class="sidebar-brand-icon rotate-n-15"></div>
                     <div class="sidebar-brand-text mx-3"></div>
                 </a>
                 <hr class="sidebar-divider my-0">
                 <ul class="navbar-nav text-light" id="accordionSidebar">
-                    <li class="nav-item"><a class="nav-link" href="index.php"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="bestanden.php"><i class="fas fa-user"></i><span>Bestanden</span></a></li>
                     <li class="nav-item"><a class="nav-link active" href="gebruikers.php"><i class="fa fa-files-o"></i><span>Gebruikers</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="../index.php"><i class="fa fa-files-o"></i><span>RIVORDELTA</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="all_news.php"><i class="fa fa-files-o"></i><span>Nieuwsbrief</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="comments.php"><i class="fa fa-files-o"></i><span>Comments</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="../index.php"><i class="fa fa-files-o"></i><span>Website</span></a></li>
                 </ul>
                 <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div>
             </div>
@@ -49,18 +56,9 @@ $gebruikers_table_result = $mysql->query($gebruikers_table_sql);
                             <div class="input-group"></div>
                         </form>
                         <ul class="navbar-nav flex-nowrap ms-auto">
-                            <li class="nav-item dropdown d-sm-none no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><i class="fas fa-search"></i></a>
-                                <div class="dropdown-menu dropdown-menu-end p-3 animated--grow-in" aria-labelledby="searchDropdown">
-                                    <form class="me-auto navbar-search w-100">
-                                        <div class="input-group"><input class="bg-light form-control border-0 small" type="text" placeholder="Search for ...">
-                                            <div class="input-group-append"><button class="btn btn-primary py-0" type="button"><i class="fas fa-search"></i></button></div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </li>
                             <div class="d-none d-sm-block topbar-divider"></div>
                             <li class="nav-item dropdown no-arrow">
-                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><span class="d-none d-lg-inline me-2 text-gray-600 small"><?php echo $_SESSION['login_user'];?></span><img class="border rounded-circle img-profile" src="assets/img/abstract-user-flat-4.png"></a>
+                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><span class="d-none d-lg-inline me-2 text-gray-600 small"><?php echo $_SESSION['login_user']; ?></span><img class="border rounded-circle img-profile" src="assets/img/abstract-user-flat-4.png"></a>
                                     <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in">
                                         <a class="dropdown-item" href="./logout.php"><i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Logout</a>
                                     </div>
@@ -70,78 +68,70 @@ $gebruikers_table_result = $mysql->query($gebruikers_table_sql);
                     </div>
                 </nav>
                 <div class="container-fluid">
-    <h3 class="text-dark mb-4">Bestanden</h3>
-    <div class="card shadow">
-        <div class="card-header py-3">
-            <p class="text-primary m-0 fw-bold">Bestanden</p>
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-6 text-nowrap">
-                    <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable"><label class="form-label">Show <select class="d-inline-block form-select form-select-sm">
-                                <option value="10" selected>10</option>
-                                <option value="25">25</option>
-                                <option value="50">50</option>
-                                <option value="100">100</option>
-                            </select></label></div>
-                </div>
-                <div class="col-md-6">
-                    <div class="text-md-end dataTables_filter" id="dataTable_filter"><label class="form-label"><input type="search" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Zoeken" /></label></div>
-                </div>
+                    <h3 class="text-dark mb-4">Gebruikers</h3>
+                    
+                    <div class="container-fluid">
+                        <div class="card shadow">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 text-nowrap">
+                                        <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable"></div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="text-md-end dataTables_filter" id="dataTable_filter"><label class="form-label"></label></div>
+                                    </div>
+                                </div>
+                                <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
+                                    <table class="table my-0" id="dataTable">
+                                        <thead>
+                                            <tr>
+                                                <td><strong>Email</strong></td>
+                                                <td><strong>Categorie</strong></td>
+                                                <td><strong>Upload Datum</strong></td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        <?php
+                                                $sql = "SELECT * FROM accounts";
+                                                $stm = $pdo->query($sql);
+
+                                                $files = $stm->fetchAll();
+
+                                                foreach ($files as $files) {
+                                                    echo "<tr>";
+                                                    echo "<td>" . $files["email"] . "</td>";
+                                                    echo "<td>" . $files["categorie"] . "</td>";
+                                                    ?>
+                                                       <td>
+                                                       <a href="./del_user.php?id=<?php echo $files['idaccounts'];?>"><i class="fas fa-trash"></i></a>
+                                                    </td>
+                                                    <?php
+                                                    echo "</tr>";
+                                                }
+                                            ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 align-self-center">
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="card shadow mb-5"></div>
+                        </div>
+                    </div>
+
+                    <footer class="bg-white sticky-footer">
+                        <div class="container my-auto">
+                            <div class="text-center my-auto copyright"><span>Copyright © RIVORDELTA 2021</span></div>
+                        </div>
+                    </footer>
+                </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
             </div>
-            <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
-                <table class="table my-0" id="dataTable">
-                    <thead>
-                    <tr>
-                            <td><strong>E-mail adres</strong></td>
-                            <td><strong>Rol</strong></td>
-                            <td><strong>Categorie</strong></td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <?php
-                        if ($gebruikers_table_result->num_rows > 0) {
-                            // output data of each row
-                            while ($row = mysqli_fetch_array($gebruikers_table_result)) {
-                                echo "<tr>";
-                                    echo "<td>" . $row["email"] . "</td>";
-                                    if($row['role'] == "1"){echo "<td>admin</td>";}elseif($row['role'] == "2"){echo "<td>project begeleider</td>";}else{echo "<td>vriend</td>";}
-                                    echo "<td>" . $row["categorie"] . "</td>";
-                                echo "</tr>";
-                            }
-                        }
-                    ?>
-                    </tfoot>
-                </table>
-            </div>
-            <div class="row">
-                <div class="col-md-6 align-self-center">
-                    <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Showing 1 to 10 of 27</p>
-                </div>
-                <div class="col-md-6">
-                    <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
-                        <ul class="pagination">
-                            <li class="page-item disabled"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
-                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">»</span></a></li>
-                        </ul>
-                    </nav>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-            <footer class="bg-white sticky-footer">
-                <div class="container my-auto">
-                    <div class="text-center my-auto copyright"><span>Copyright © RIVORDELTA 2021</span></div>
-                </div>
-            </footer>
-        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
-    </div>
-    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
-    <script src="assets/js/theme.js"></script>
+            <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+            <script src="assets/js/theme.js"></script>
 </body>
 
 </html>

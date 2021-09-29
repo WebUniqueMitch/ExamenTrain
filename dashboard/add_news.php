@@ -52,18 +52,18 @@ if(isset($_POST['submit'])){
 
 <body id="page-top">
     <div id="wrapper">
-        <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0">
+    <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0">
             <div class="container-fluid d-flex flex-column p-0"><a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
                     <div class="sidebar-brand-icon rotate-n-15"></div>
                     <div class="sidebar-brand-text mx-3"></div>
                 </a>
                 <hr class="sidebar-divider my-0">
                 <ul class="navbar-nav text-light" id="accordionSidebar">
-                    <li class="nav-item"><a class="nav-link" href="index.php"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="bestanden.php"><i class="fas fa-user"></i><span>Bestanden</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="gebruikers.php"><i class="fa fa-files-o"></i><span>Gebruikers</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="../index.php"><i class="fa fa-files-o"></i><span>RIVORDELTA</span></a></li>
                     <li class="nav-item"><a class="nav-link active" href="all_news.php"><i class="fa fa-files-o"></i><span>Nieuwsbrief</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="comments.php"><i class="fa fa-files-o"></i><span>Comments</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="../index.php"><i class="fa fa-files-o"></i><span>Website</span></a></li>
                 </ul>
                 <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div>
             </div>

@@ -1,43 +1,52 @@
-<?php 
+<?php
 session_start();
 include("./secured/pdoconn.php");
-if(isset($_SESSION['logged_in'])){
+if (isset($_SESSION['logged_in'])) {
     header("location: ./index.php");
 }
 
-$msg = ""; 
+$msg = "";
 
-if(isset($_POST['submit'])) {
-  $username = htmlspecialchars(trim($_POST['username']));
-  $password = htmlspecialchars(trim($_POST['password']));
-  $hashed_pass = hash("SHA1", $password);
-  
-  if($username != "" && $password != "") {
-    try {
-      $query = "select * from `accounts` where `email`=:username and `password`=:password";
-      $stmt = $pdo->prepare($query);
-      $stmt->bindParam('username', $username, PDO::PARAM_STR);
-      $stmt->bindValue('password', $hashed_pass, PDO::PARAM_STR);
-      $stmt->execute();
-      $count = $stmt->rowCount();
-      $row   = $stmt->fetch(PDO::FETCH_ASSOC);
-      if($count == 1 && !empty($row)) {
-    
-        $_SESSION['logged_in'] = 1;
-        $_SESSION['login_user'] = $username;
+if (isset($_POST['submit'])) {
+    $username = htmlspecialchars(trim($_POST['username']));
+    $password = htmlspecialchars(trim($_POST['password']));
+    $hashed_pass = hash("SHA1", $password);
 
-        header("location: ./index.php");
-      } else {
-        $msg = "Invalid username and password!";
-      }
-    } catch (PDOException $e) {
-      echo "Error : ".$e->getMessage();
+    if ($username != "" && $password != "") {
+        try {
+            $query = "select * from `accounts` where `email`=:username and `password`=:password";
+            $stmt = $pdo->prepare($query);
+            $stmt->bindParam('username', $username, PDO::PARAM_STR);
+            $stmt->bindValue('password', $hashed_pass, PDO::PARAM_STR);
+            $stmt->execute();
+            $count = $stmt->rowCount();
+            $row   = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($count == 1 && !empty($row)) {
+                echo "dw";
+                $sql = "SELECT * FROM accounts where `email`= '$username'";
+                $stm = $pdo->query($sql);
+
+                $account = $stm->fetchAll();
+                foreach($account as $account){
+                    $_SESSION['role'] = $account['role'];
+                }
+                
+
+                $_SESSION['logged_in'] = 1;
+                $_SESSION['login_user'] = $username;
+
+                header("location: ./index.php");
+            } else {
+                $msg = "Invalid username and password!";
+            }
+        } catch (PDOException $e) {
+            echo "Error : " . $e->getMessage();
+        }
+    } else {
+        $msg = "Both fields are required!";
     }
-  } else {
-    $msg = "Both fields are required!";
-  }
 }
-if(isset($msg)){
+if (isset($msg)) {
     echo $msg;
 }
 ?>
