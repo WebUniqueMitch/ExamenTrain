@@ -1,6 +1,19 @@
 <?php
 include("./secured/pdoconn.php");
+session_start();
 
+if(isset($_POST['submit'])){
+    $titel = htmlspecialchars($_POST['onderwerp']);
+    $description = htmlspecialchars($_POST['beschrijving']);
+    $gemaakt = htmlspecialchars($_POST['geschreven_door']);
+    $id = htmlspecialchars($_POST['id']);
+
+    $sql = "INSERT INTO comments (titel, description, geplaatst_door, news_idnews) VALUES (?,?,?,?)";
+    $stmt= $pdo->prepare($sql);
+    $stmt->execute([$titel, $description, $gemaakt, $id]);
+
+    $feedback = "Comment wordt eerst gecontrolleert door site eigenaar!";
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -17,15 +30,23 @@ include("./secured/pdoconn.php");
 </head>
 
 <body>
-    <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-white clean-navbar">
+<nav class="navbar navbar-light navbar-expand-lg fixed-top bg-white clean-navbar">
         <div class="container"><img class="img-fluid" src="assets/img/tech/logo.svg"><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navcol-1">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="successverhalen.html" style="color: rgba(0,0,0,0.55);">successverhalen</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="informatie.html">informatie</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="informatie.php">nieuwsbrief</a></li>
                 </ul>
-            </div><a class="btn btn-primary" role="button" href="login.php">login</a>
+                <?php
+                        if(isset($_SESSION['logged_in'])){
+                            echo '</div><a class="btn btn-primary" role="button" href="./dashboard/index.php">Dashboard</a>';
+                        }else{
+                            echo '</div><a class="btn btn-primary" role="button" href="login.php">login</a>';
+                        }
+                        
+                ?>
+            
         </div>
     </nav>
     <main class="page blog-post">
@@ -42,8 +63,44 @@ include("./secured/pdoconn.php");
                             $nieuws_berichten = $stm->fetchAll();
 
                             foreach ($nieuws_berichten as $nieuws_bericht) {
-                                echo "<img width='500' class='nieuws_plaatje' height='500' src='./dashboard/images/". $nieuws_bericht['picture_path'] ."'><h2 class='head_niewus'><b> " . $nieuws_bericht["headtext"] . "</h2> </b><p class='nieuws_text'> " . $nieuws_bericht["newstext"] ."</p>" . "<hr/>";
-                               
+                                $id = $nieuws_bericht['idnews'];
+
+                                $timeStamp = $nieuws_bericht['datum'];
+                                $timeStamp = date( "m/d/Y", strtotime($timeStamp));
+                                echo "<h2 class='head_niewus'><b> " . $nieuws_bericht["headtext"] . "</h2></b><img height='600' width='1000' class='nieuws_plaatje'src='./dashboard/images/". $nieuws_bericht['picture_path'] ."'><p class='timestamp'>Datum: ".$timeStamp."</p><p class='nieuws_text'> " . $nieuws_bericht["newstext"] ."</p>" . "<hr/>";
+                                // hier de comments a ZB
+                                $sql = "SELECT * FROM comments WHERE news_idnews = $id AND accepted = 1";
+                                $stm = $pdo->query($sql);
+    
+                                $comments_news = $stm->fetchAll();
+    
+                                foreach ($comments_news as $comments_news) {
+                                    echo "Geplaatst door: <b>".$comments_news['titel'] . "</b><br>";
+                                    echo $comments_news['description'];
+                                    echo "<hr>";
+                                }
+
+                                ?> 
+                                <div class="reacties">
+                                    
+                                        <form action="" method="POST">
+                                            <input type="text" max=20 name="onderwerp" placeholder="Onderwerp*"><br>
+                                            <textarea name="beschrijving" max="500" placeholder="Beschrijvijng*"></textarea><br>
+                                            <input type="text" name="geschreven_door" placeholder="Geschreven door"><br>
+                                            <input type="hidden" name="id" value="<?php echo $nieuws_bericht['idnews'];?>">
+                                            <input type="submit" name="submit" value="Plaatsen">
+                                        </form>
+                                        <?php 
+                                        if(isset($feedback)){
+                                            echo $feedback;
+                                        }
+                                        ?>
+                                        
+                                </div>
+                                <?php
+                                echo '<hr style="height:3px;border:none;color:#333;background-color:#333;" />';
+
+                                
                             }
                         ?>
                     </div>

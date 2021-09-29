@@ -13,6 +13,7 @@ session_start();
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,700,700i,600,600i">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css">
     <link rel="stylesheet" href="assets/css/vanilla-zoom.min.css">
+    <link rel="stylesheet" href="./styling/style_home.css">
 </head>
 
 <body>
@@ -22,7 +23,7 @@ session_start();
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link active" href="index.php">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="successverhalen.html" style="color: rgba(0,0,0,0.55);">successverhalen</a></li>
-                    <li class="nav-item"><a class="nav-link" href="informatie.html">informatie</a></li>
+                    <li class="nav-item"><a class="nav-link" href="informatie.php">nieuwsbrief</a></li>
                 </ul>
                 <?php
                         if(isset($_SESSION['logged_in'])){
@@ -39,7 +40,7 @@ session_start();
         <section class="clean-block clean-hero" style="color: rgba(9, 162, 255, 0.85);background: url(&quot;assets/img/tech/Untitled-1.png&quot;) center / cover;">
             <div class="text">
                 <h2>ROC DELTA</h2>
-                <p>ben jij 18 jaar of ouder maar heb je nog geen diploma kunnen halane maar zou jij dit wel willen? Dan is dit de plek voor jou!</p><button class="btn btn-outline-light btn-lg" type="button" style="background: #ffffff;"><a href="informatie.html" style="background: #ffffff;">Meer weten</a></button>
+                <p>ben jij 18 jaar of ouder maar heb je nog geen diploma kunnen halan maar zou jij dit wel willen? Dan is dit de plek voor jou!</p><button class="btn btn-outline-light btn-lg" type="button" style="background: #ffffff;"><a href="informatie.html" class="underline_wooosh" style="background: #ffffff;">Meer weten</a></button>
             </div>
         </section>
         <section class="clean-block clean-info dark">

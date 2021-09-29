@@ -105,11 +105,12 @@ if(isset($_POST['submit'])){
                                      -->
                                     <form action="" method="POST" enctype="multipart/form-data"> 
                                         <label for="headtext">Titel: </label>
-                                        <input type="text" name="headtext" placeholder="">
+                                        <input type="text" name="headtext" placeholder=""><br><br>
                                         <label for="bodytext">Text: </label>
-                                        <textarea name="bodytext"></textarea>
+                                        <textarea name="bodytext"></textarea><br><br>
                                         <label for="plaatje">Plaatje: </label>
-                                        <input type="file" accept="image/png, image/jpeg" name="image">
+                                        <input type="file" accept="image/png, image/jpeg" name="image"><br><br>
+                                        
                                         
                                         <input type="submit" name="submit" value="Toevoegen!">
                                     </form>

@@ -36,8 +36,9 @@ if (!isset($_SESSION['logged_in'])) {
                     <li class="nav-item"><a class="nav-link" href="index.php"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="bestanden.php"><i class="fas fa-user"></i><span>Bestanden</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="gebruikers.php"><i class="fa fa-files-o"></i><span>Gebruikers</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="../index.php"><i class="fa fa-files-o"></i><span>RIVORDELTA</span></a></li>
-                    <li class="nav-item"><a class="nav-link active" href="all_news.php"><i class="fa fa-files-o"></i><span>Nieuwsbrief</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="../index.php"><i class="fa fa-files-o"></i><span>Website</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="all_news.php"><i class="fa fa-files-o"></i><span>Nieuwsbrief</span></a></li>
+                    <li class="nav-item"><a class="nav-link active" href="comments.php"><i class="fa fa-files-o"></i><span>Comments</span></a></li>
                 </ul>
                 <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div>
             </div>
@@ -62,35 +63,34 @@ if (!isset($_SESSION['logged_in'])) {
                     </div>
                 </nav>
                 <div class="container-fluid">
-                    <h3 class="text-dark mb-4">Nieuwsbrief</h3>
+                    <h3 class="text-dark mb-4">Comments</h3>
                     <div class="container-fluid">
                         <div class="card shadow">
                             <div class="card-body">
                                 <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
                                     <table class="table my-0" id="dataTable">
-                                    <a href="./add_news.php" class="button">Toevoegen</a>
                                         <thead>
                                             <tr>
                                                 <td><strong>Titel</strong></td>
                                                 <td><strong>Datum</strong></td>
-                                                <td><strong>Aanpassen/Verwijderen</strong></td>
+                                                <td><strong>Verwijderen</strong></td>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php
-                                                $sql = "SELECT * FROM news";
+                                                $sql = "SELECT * FROM comments WHERE accepted = 0";
                                                 $stm = $pdo->query($sql);
 
                                                 $nieuws_berichten = $stm->fetchAll();
 
                                                 foreach ($nieuws_berichten as $nieuws_bericht) {
                                                     echo "<tr>";
-                                                    echo "<td>" . $nieuws_bericht["headtext"] . "</td>";
-                                                    echo "<td>" . $nieuws_bericht["datum"] . "</td>";  
+                                                    echo "<td>" . $nieuws_bericht["titel"] . "</td>";
+                                                    echo "<td>" . $nieuws_bericht["description"] . "</td>";  
                                                     ?>
-                                                       <td> <a href="./edit_news.php?id=<?php echo $nieuws_bericht['idnews'];?>"> <i class="fas fa-edit"></i></a>
-                                                       <a href="./del_news.php?id=<?php echo $nieuws_bericht['idnews'];?>"><i class="fas fa-trash"></i></a>
-                                                    
+                                                       <td>
+                                                       <a href="./del_comment.php?id=<?php echo $nieuws_bericht['idcomments'];?>"><i class="fas fa-trash"></i></a>
+                                                       <a href="./acc_comments.php?id=<?php echo $nieuws_bericht['idcomments'];?>"><i class="far fa-thumbs-up"></i></a>
                                                     </td>
                                                     <?php
                                                     echo "</tr>";
@@ -100,9 +100,6 @@ if (!isset($_SESSION['logged_in'])) {
                                     </table>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-6 align-self-center">
-                                        <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Totaal:  Bestanden.</p>
-                                    </div>
 
                                 </div>
                             </div>

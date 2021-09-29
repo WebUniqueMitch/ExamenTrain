@@ -62,7 +62,7 @@ if(isset($msg)){
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="successverhalen.html" style="color: rgba(0,0,0,0.55);">successverhalen</a></li>
-                    <li class="nav-item"><a class="nav-link" href="informatie.html">informatie</a></li>
+                    <li class="nav-item"><a class="nav-link" href="informatie.php">nieuwsbrief</a></li>
                 </ul>
             </div><a class="btn btn-primary" role="button" href="login.php">login</a>
         </div>
