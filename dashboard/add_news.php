@@ -100,9 +100,6 @@ if(isset($_POST['submit'])){
                                     </div>
                                 </div>
                                 <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
-                                    <!-- 
-                                        nieuws toevoegen
-                                     -->
                                     <form action="" method="POST" enctype="multipart/form-data"> 
                                         <label for="headtext">Titel: </label>
                                         <input type="text" name="headtext" placeholder=""><br><br>

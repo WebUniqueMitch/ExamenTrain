@@ -1,20 +1,14 @@
 <?php
 session_start();
 include("../secured/pdoconn.php");
-
-
+$feedback = "";
 if (!isset($_SESSION['logged_in'])) {
     header("location: ../index.php");
 }
+$id = $_GET['id'];
 
-// files tellen en in variable zetten
-// $files_count_result = $mysql->query("SELECT COUNT(idfiles) FROM files");
-// $files_count = $files_count_result->num_rows;
-// // files kunnen uploaden
-
-// // files uitlezen
-// $files_table_sql = "SELECT * FROM files";
-// $files_table_result = $mysql->query($files_table_sql);
+$stmt = $pdo->query("SELECT * FROM contact WHERE id=$id");
+$contact = $stmt->fetch();
 ?>
 <!DOCTYPE html>
 <html>
@@ -22,18 +16,18 @@ if (!isset($_SESSION['logged_in'])) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Bestanden - RIVORDELTA</title>
+    <title>Bestand - RIVORDELTA</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
     <link rel="stylesheet" href="assets/fonts/fontawesome-all.min.css">
-    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
     <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body id="page-top">
     <div id="wrapper">
-    <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0">
+        <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0">
             <div class="container-fluid d-flex flex-column p-0"><a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
                     <div class="sidebar-brand-icon rotate-n-15"></div>
                     <div class="sidebar-brand-text mx-3"></div>
@@ -41,7 +35,7 @@ if (!isset($_SESSION['logged_in'])) {
                 <hr class="sidebar-divider my-0">
                 <ul class="navbar-nav text-light" id="accordionSidebar">
                     <li class="nav-item"><a class="nav-link active" href="bestanden.php"><i class="fas fa-user"></i><span>Bestanden</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="gebruikers.php"><i class="fa fa-files-o"></i><span>Gebruikers</span></a></li>
+                    <li class="nav-item"><a class="nav-link " href="gebruikers.php"><i class="fa fa-files-o"></i><span>Gebruikers</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="all_news.php"><i class="fa fa-files-o"></i><span>Nieuwsbrief</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="comments.php"><i class="fa fa-files-o"></i><span>Comments</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="all_contact.php"><i class="fa fa-files-o"></i><span>Contact</span></a></li>
@@ -70,61 +64,28 @@ if (!isset($_SESSION['logged_in'])) {
                     </div>
                 </nav>
                 <div class="container-fluid">
-                    <h3 class="text-dark mb-4">Bestanden</h3>
+
+                    <h3 class="text-dark mb-4">File toevoegen</h3>
                     <div class="container-fluid">
-                    
                         <div class="card shadow">
                             <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6 text-nowrap">
-                                    <a href="./add_file.php" class="button">Toevoegen</a>
-                                        <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable"></div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="text-md-end dataTables_filter" id="dataTable_filter"><label class="form-label"></label></div>
-                                    </div>
-                                </div>
-                                <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
-                                    <table class="table my-0" id="dataTable">
-                                        <thead>
-                                            <tr>
-                                                <td><strong>Name</strong></td>
-                                                <td><strong>Categorie</strong></td>
-                                                <td><strong>Upload Datum</strong></td>
-                                                <td><strong>Geupload door</strong></td>
-                                                <td><strong>Verwijderen</strong></td>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-
-                                        <?php
-                                                $sql = "SELECT * FROM files";
-                                                $stm = $pdo->query($sql);
-
-                                                $files = $stm->fetchAll();
-
-                                                foreach ($files as $files) {
-                                                    echo "<tr>";
-                                                    echo "<td>" . $files["name"] . "</td>";
-                                                    echo "<td>" . $files["categorie"] . "</td>";  
-                                                    echo "<td>" . $files["date"] . "</td>"; 
-                                                    echo "<td>" . $files["uploaded_by"] . "</td>";   
-                                                    ?>
-                                                       <td>
-                                                       <a href="./del_files.php?id=<?php echo $files['idfiles'];?>"><i class="fas fa-trash"></i></a>
-                                                    </td>
-                                                    <?php
-                                                    echo "</tr>";
-                                                }
-                                            ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6 align-self-center">
-                                    </div>
-
-                                </div>
+                            <a href="./all_contact.php" class="button">Terug</a>
+                            <?php
+                                    echo "<h3>".$contact['onderwerp'] . " </h3><br>";
+                                    echo "<p>".$contact['bericht'] . "<p><br>";
+                                    echo "email: ".$contact['email'] . "<br>";
+                                    ?> 
+                                    <form action="" method="POST">
+                                        <label for="status">Verander status: </label>
+                                        <select>
+                                         <option value="1" <?php if($contact['status'] == "1"){echo 'selected="selected"';}?>>Afgehandeld</option>
+                                         <option value="2" <?php if($contact['status'] == "2"){echo 'selected="selected"';}?>>Nog Niet afgehandeld</option>
+                                        </select>
+                                        <input type="submit" name="submit" value="aanpassen">
+                                    </form>
+                                    <?php
+                                    
+                                ?>
                             </div>
                             <div class="card shadow mb-5"></div>
                         </div>

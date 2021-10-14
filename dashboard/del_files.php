@@ -7,5 +7,5 @@ $sql = "DELETE FROM files WHERE idfiles=?";
 $stmt= $pdo->prepare($sql);
 $stmt->execute([$id]);
 
-header("location: ./all_news.php");
+header("location: ./bestanden.php");
 ?>

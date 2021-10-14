@@ -2,19 +2,9 @@
 session_start();
 include("../secured/pdoconn.php");
 
-
 if (!isset($_SESSION['logged_in'])) {
     header("location: ../index.php");
 }
-
-// files tellen en in variable zetten
-// $files_count_result = $mysql->query("SELECT COUNT(idfiles) FROM files");
-// $files_count = $files_count_result->num_rows;
-// // files kunnen uploaden
-
-// // files uitlezen
-// $files_table_sql = "SELECT * FROM files";
-// $files_table_result = $mysql->query($files_table_sql);
 ?>
 <!DOCTYPE html>
 <html>
@@ -26,7 +16,6 @@ if (!isset($_SESSION['logged_in'])) {
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
     <link rel="stylesheet" href="assets/fonts/fontawesome-all.min.css">
-    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
     <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
 </head>
@@ -40,11 +29,11 @@ if (!isset($_SESSION['logged_in'])) {
                 </a>
                 <hr class="sidebar-divider my-0">
                 <ul class="navbar-nav text-light" id="accordionSidebar">
-                    <li class="nav-item"><a class="nav-link active" href="bestanden.php"><i class="fas fa-user"></i><span>Bestanden</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="bestanden.php"><i class="fas fa-user"></i><span>Bestanden</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="gebruikers.php"><i class="fa fa-files-o"></i><span>Gebruikers</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="all_news.php"><i class="fa fa-files-o"></i><span>Nieuwsbrief</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="comments.php"><i class="fa fa-files-o"></i><span>Comments</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="all_contact.php"><i class="fa fa-files-o"></i><span>Contact</span></a></li>
+                    <li class="nav-item"><a class="nav-link active" href="all_contact.php"><i class="fa fa-files-o"></i><span>Contact</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="../index.php"><i class="fa fa-files-o"></i><span>Website</span></a></li>
                 </ul>
                 <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div>
@@ -72,12 +61,10 @@ if (!isset($_SESSION['logged_in'])) {
                 <div class="container-fluid">
                     <h3 class="text-dark mb-4">Bestanden</h3>
                     <div class="container-fluid">
-                    
                         <div class="card shadow">
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-6 text-nowrap">
-                                    <a href="./add_file.php" class="button">Toevoegen</a>
                                         <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable"></div>
                                     </div>
                                     <div class="col-md-6">
@@ -88,32 +75,40 @@ if (!isset($_SESSION['logged_in'])) {
                                     <table class="table my-0" id="dataTable">
                                         <thead>
                                             <tr>
-                                                <td><strong>Name</strong></td>
-                                                <td><strong>Categorie</strong></td>
-                                                <td><strong>Upload Datum</strong></td>
-                                                <td><strong>Geupload door</strong></td>
-                                                <td><strong>Verwijderen</strong></td>
+                                                <td><strong>email</strong></td>
+                                                <td><strong>Onderwerp</strong></td>
+                                                <td><strong>bericht</strong></td>
+                                                <td><strong>status</strong></td>
                                             </tr>
                                         </thead>
                                         <tbody>
 
                                         <?php
-                                                $sql = "SELECT * FROM files";
+                                                $sql = "SELECT * FROM contact";
                                                 $stm = $pdo->query($sql);
 
-                                                $files = $stm->fetchAll();
+                                                $contact = $stm->fetchAll();
 
-                                                foreach ($files as $files) {
+                                                foreach ($contact as $contact) {
                                                     echo "<tr>";
-                                                    echo "<td>" . $files["name"] . "</td>";
-                                                    echo "<td>" . $files["categorie"] . "</td>";  
-                                                    echo "<td>" . $files["date"] . "</td>"; 
-                                                    echo "<td>" . $files["uploaded_by"] . "</td>";   
-                                                    ?>
-                                                       <td>
-                                                       <a href="./del_files.php?id=<?php echo $files['idfiles'];?>"><i class="fas fa-trash"></i></a>
-                                                    </td>
-                                                    <?php
+
+                                                    echo "<td><a href=./contact.php?id=".$contact["id"]." target='_blank'>" . $contact["email"] . "</a></td>";
+                                                    echo "<td>" . $contact["onderwerp"] . "</td>";
+                                                    echo "<td>"; 
+                                                    $msg = $contact['bericht'];
+                                                    if (strlen($msg) > 20){
+                                                        $msg= substr($msg, 0, 17) . '...'; 
+                                                        echo $msg;
+                                                    }else{
+                                                        echo $msg;
+                                                    }
+                                                    if($contact['status'] == "1"){
+                                                        echo "<td>Behandeld</td>";
+                                                    }else{
+                                                        echo "<td>Niet behandeld</td>";
+                                                    }
+                                                  
+                                                    echo "</td>";  
                                                     echo "</tr>";
                                                 }
                                             ?>

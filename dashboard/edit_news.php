@@ -49,6 +49,7 @@ if (isset($_POST['submit'])) {
                     <li class="nav-item"><a class="nav-link " href="gebruikers.php"><i class="fa fa-files-o"></i><span>Gebruikers</span></a></li>
                     <li class="nav-item"><a class="nav-link active" href="all_news.php"><i class="fa fa-files-o"></i><span>Nieuwsbrief</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="comments.php"><i class="fa fa-files-o"></i><span>Comments</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="all_contact.php"><i class="fa fa-files-o"></i><span>Contact</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="../index.php"><i class="fa fa-files-o"></i><span>Website</span></a></li>
                 </ul>
                 <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div>
