@@ -6,15 +6,6 @@ include("../secured/pdoconn.php");
 if (!isset($_SESSION['logged_in'])) {
     header("location: ../index.php");
 }
-
-// files tellen en in variable zetten
-// $files_count_result = $mysql->query("SELECT COUNT(idfiles) FROM files");
-// $files_count = $files_count_result->num_rows;
-// // files kunnen uploaden
-
-// // files uitlezen
-// $files_table_sql = "SELECT * FROM files";
-// $files_table_result = $mysql->query($files_table_sql);
 ?>
 <!DOCTYPE html>
 <html>

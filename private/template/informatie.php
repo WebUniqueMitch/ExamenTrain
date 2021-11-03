@@ -1,4 +1,5 @@
 <?php
+session_start();
 if(isset($_POST['submit'])){
     $titel = htmlspecialchars($_POST['onderwerp']);
     $description = htmlspecialchars($_POST['beschrijving']);
@@ -45,9 +46,8 @@ if(isset($_POST['submit'])){
                                 foreach ($comments_news as $comments_news) {
                                     echo "Geplaatst door: <b>".$comments_news['titel'] . "</b><br>";
                                     echo $comments_news['description'];
-                                    if($_SESSION['role'] == "1"){?>
-                                    
-                                        <br><br><a href="./dashboard/del_comment.php?id=<?php echo $comments_news['idcomments'];?>"><i class="fa fa-trash" style="font-size: 35px; color:red;" class="trashcan" aria-hidden="true"></i></i></a><?php
+                                    if(!isset($_SESSTION) && $_SESSION['role'] == "1"){?>
+                                        <br><br><a href="./dashboard/del_comment.php?id=<?php echo $comments_news['idcomments'];?>&page=1"><i class="fa fa-trash" style="font-size: 35px; color:red;" class="trashcan" aria-hidden="true"></i>Delete</i></a><?php
                                     }
                                     echo "<hr>";
                                 }
